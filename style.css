@@ -612,35 +612,39 @@ h2 {
 .price {
     display: flex;
     align-items: baseline;
-    gap: 8px;
+    flex-wrap: wrap;
+    gap: 7px;
     margin: 30px 0 0;
 }
 
+.price small {
+    width: 100%;
+    font-size: 11px;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-weight: 700;
+}
+
 .price strong {
-    font-family: 'Manrope';
-    font-size: 32px;
-    letter-spacing: -0.05em;
+    font-family: 'Manrope', sans-serif;
+    font-size: 42px;
+    letter-spacing: -0.06em;
+    color: var(--green);
 }
 
-.price span,
-.price-note {
-    font-size: 12px;
+.price span {
+    font-size: 13px;
     color: var(--muted);
 }
 
-.featured .price span,
-.featured .price-note {
-    color: rgba(255, 255, 255, 0.6);
+.featured .price small,
+.featured .price span {
+    color: rgba(255, 255, 255, 0.65);
 }
 
-.offer-description {
-    margin: 18px 0;
-    color: var(--muted);
-    font-size: 14px;
-}
-
-.featured .offer-description {
-    color: rgba(255, 255, 255, 0.7);
+.featured .price strong {
+    color: #fff;
 }
 
 .offer-list {
@@ -931,11 +935,10 @@ h2 {
 ========================= */
 
 .footer {
-    background: #102a22;
-    color: #fff;
+    background: var(--cream);
+    color: var(--ink);
     padding: 65px 0 22px;
 }
-
 .footer-grid {
     display: grid;
     grid-template-columns: 1.6fr 1fr 1fr;
@@ -944,13 +947,14 @@ h2 {
 
 .footer-brand img {
     width: 145px;
-    filter: brightness(0) invert(1);
+    height: auto;
     margin-bottom: 18px;
+    filter: none;
 }
 
 .footer-brand p {
     max-width: 350px;
-    color: rgba(255, 255, 255, 0.58);
+    color: var(--muted);
     font-size: 13px;
 }
 
@@ -968,21 +972,21 @@ h2 {
 .footer-column a,
 .footer-column span {
     font-size: 13px;
-    color: rgba(255, 255, 255, 0.62);
+    color: var(--muted);
 }
 
 .footer-column a:hover {
-    color: #fff;
+    color: var(--green);
 }
 
 .footer-bottom {
     display: flex;
     justify-content: space-between;
     gap: 20px;
-    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    border-top: 1px solid var(--line);
     margin-top: 50px;
     padding-top: 20px;
-    color: rgba(255, 255, 255, 0.45);
+    color: var(--muted);
     font-size: 11px;
 }
 
@@ -992,9 +996,8 @@ h2 {
 }
 
 .footer-legal a:hover {
-    color: #fff;
+    color: var(--green);
 }
-
 
 /* =========================
    ANIMATIONS
@@ -1025,7 +1028,11 @@ h2 {
     .trust-grid {
         grid-template-columns: repeat(2, 1fr);
     }
-
+.footer {
+    background: var(--cream);
+    color: var(--ink);
+    padding: 65px 0 22px;
+}
     .trust-item:nth-child(2) {
         border-right: 0;
     }
