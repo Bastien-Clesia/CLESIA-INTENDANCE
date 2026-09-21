@@ -1631,7 +1631,7 @@ textarea {
             rgba(38, 56, 47, 0.94),
             rgba(38, 56, 47, 0.94)
         ),
-        url("assets/hero/hero-bg.webp")
+        url("hero-bg.webp")
         center / cover no-repeat;
 }
 
