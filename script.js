@@ -1,258 +1,207 @@
-
 /* =========================================================
-   CLÉSIA PROVENCE — SCRIPT.JS
-   ========================================================= */
+   CLÉSIA PROVENCE — SCRIPT
+========================================================= */
 
 document.addEventListener("DOMContentLoaded", () => {
 
-    /* =====================================================
-       MENU MOBILE
-       ===================================================== */
-
-    const burger = document.getElementById("burger");
-    const nav = document.getElementById("nav");
-
-    if (burger && nav) {
-
-        burger.addEventListener("click", () => {
-
-            const isOpen = nav.classList.toggle("active");
-
-            burger.setAttribute(
-                "aria-expanded",
-                isOpen ? "true" : "false"
-            );
-
-        });
-
-
-        // Fermer le menu lorsqu'on clique sur un lien
-        nav.querySelectorAll("a").forEach(link => {
-
-            link.addEventListener("click", () => {
-
-                nav.classList.remove("active");
-
-                burger.setAttribute(
-                    "aria-expanded",
-                    "false"
-                );
-
-            });
-
-        });
-
-    }
-
 
     /* =====================================================
-       DÉFILEMENT FLUIDE
-       ===================================================== */
+       ÉLÉMENTS
+    ===================================================== */
 
-    document.querySelectorAll('a[href^="#"]').forEach(link => {
+    const header =
+        document.querySelector(".site-header");
 
-        link.addEventListener("click", function (event) {
+    const burger =
+        document.getElementById("burger");
 
-            const targetId = this.getAttribute("href");
-
-            // Ignore les liens "#"
-            if (!targetId || targetId === "#") {
-                return;
-            }
-
-            const target = document.querySelector(targetId);
-
-            if (!target) {
-                return;
-            }
-
-            event.preventDefault();
-
-            const header = document.querySelector(".header");
-
-            const headerHeight = header
-                ? header.offsetHeight
-                : 0;
-
-            const targetPosition =
-                target.getBoundingClientRect().top +
-                window.scrollY -
-                headerHeight;
-
-            window.scrollTo({
-                top: targetPosition,
-                behavior: "smooth"
-            });
-
-        });
-
-    });
+    const nav =
+        document.getElementById("nav");
 
 
     /* =====================================================
        HEADER AU SCROLL
-       ===================================================== */
+    ===================================================== */
 
-    const header = document.querySelector(".header");
+    const updateHeader = () => {
 
-    if (header) {
+        if (!header) {
+            return;
+        }
 
-        const updateHeader = () => {
-
-            if (window.scrollY > 40) {
-
-                header.classList.add("scrolled");
-
-            } else {
-
-                header.classList.remove("scrolled");
-
-            }
-
-        };
-
-        window.addEventListener(
-            "scroll",
-            updateHeader,
-            { passive: true }
+        header.classList.toggle(
+            "scrolled",
+            window.scrollY > 30
         );
 
-        updateHeader();
-
-    }
+    };
 
 
-    /* =====================================================
-       ANIMATIONS À L'APPARITION
-       ===================================================== */
+    updateHeader();
 
-    const animatedElements = document.querySelectorAll(
-        ".service-card, " +
-        ".offer-card, " +
-        ".method-card, " +
-        ".zone-card, " +
-        ".contact-content, " +
-        ".contact-form-wrap"
+
+    window.addEventListener(
+        "scroll",
+        updateHeader,
+        {
+            passive: true
+        }
     );
 
 
-    if ("IntersectionObserver" in window) {
+    /* =====================================================
+       MENU MOBILE
+    ===================================================== */
 
-        const observer = new IntersectionObserver(
-            (entries, observer) => {
+    if (burger && nav) {
 
-                entries.forEach(entry => {
+        burger.addEventListener(
+            "click",
+            () => {
 
-                    if (entry.isIntersecting) {
+                const open =
+                    nav.classList.toggle("active");
 
-                        entry.target.classList.add("visible");
 
-                        observer.unobserve(entry.target);
+                burger.setAttribute(
+                    "aria-expanded",
+                    String(open)
+                );
 
-                    }
 
-                });
+                burger.setAttribute(
+                    "aria-label",
+                    open
+                        ? "Fermer le menu"
+                        : "Ouvrir le menu"
+                );
 
-            },
-            {
-                threshold: 0.12
             }
         );
 
 
-        animatedElements.forEach(element => {
+        nav.querySelectorAll("a")
+            .forEach(link => {
 
-            element.classList.add("reveal");
+                link.addEventListener(
+                    "click",
+                    () => {
 
-            observer.observe(element);
+                        nav.classList.remove(
+                            "active"
+                        );
 
-        });
+
+                        burger.setAttribute(
+                            "aria-expanded",
+                            "false"
+                        );
+
+
+                        burger.setAttribute(
+                            "aria-label",
+                            "Ouvrir le menu"
+                        );
+
+                    }
+                );
+
+            });
+
+
+        document.addEventListener(
+            "keydown",
+            event => {
+
+                if (
+                    event.key === "Escape"
+                ) {
+
+                    nav.classList.remove(
+                        "active"
+                    );
+
+
+                    burger.setAttribute(
+                        "aria-expanded",
+                        "false"
+                    );
+
+                }
+
+            }
+        );
+
+    }
+
+
+    /* =====================================================
+       ANIMATIONS
+    ===================================================== */
+
+    const revealItems =
+        document.querySelectorAll(
+            ".reveal"
+        );
+
+
+    if (
+        "IntersectionObserver"
+        in window
+    ) {
+
+        const observer =
+            new IntersectionObserver(
+                entries => {
+
+                    entries.forEach(
+                        entry => {
+
+                            if (
+                                entry.isIntersecting
+                            ) {
+
+                                entry.target
+                                    .classList
+                                    .add("visible");
+
+
+                                observer.unobserve(
+                                    entry.target
+                                );
+
+                            }
+
+                        }
+                    );
+
+                },
+                {
+                    threshold: 0.12
+                }
+            );
+
+
+        revealItems.forEach(
+            item => {
+
+                observer.observe(item);
+
+            }
+        );
 
     } else {
 
-        // Compatibilité avec les anciens navigateurs
-        animatedElements.forEach(element => {
+        revealItems.forEach(
+            item => {
 
-            element.classList.add("visible");
+                item.classList.add(
+                    "visible"
+                );
 
-        });
-
-    }
-
-
-    /* =====================================================
-       FORMULAIRE
-       ===================================================== */
-
-    const form = document.querySelector(".contact-form");
-
-    if (form) {
-
-        form.addEventListener("submit", event => {
-
-            /*
-             * Pour l'instant, le formulaire ne possède pas
-             * encore de service d'envoi connecté.
-             *
-             * Cette partie empêche simplement le navigateur
-             * de recharger la page.
-             */
-
-            event.preventDefault();
-
-            const button = form.querySelector(
-                'button[type="submit"]'
-            );
-
-            if (!button) {
-                return;
             }
-
-            const originalText = button.textContent;
-
-            button.textContent = "Demande envoyée ✓";
-
-            button.disabled = true;
-
-            button.style.opacity = "0.7";
-
-
-            setTimeout(() => {
-
-                button.textContent = originalText;
-
-                button.disabled = false;
-
-                button.style.opacity = "";
-
-            }, 3000);
-
-        });
-
-    }
-
-
-    /* =====================================================
-       FERMETURE DU MENU AVEC LA TOUCHE ESC
-       ===================================================== */
-
-    document.addEventListener("keydown", event => {
-
-        if (event.key !== "Escape") {
-            return;
-        }
-
-        if (!nav || !burger) {
-            return;
-        }
-
-        nav.classList.remove("active");
-
-        burger.setAttribute(
-            "aria-expanded",
-            "false"
         );
 
-    });
+    }
 
 });
