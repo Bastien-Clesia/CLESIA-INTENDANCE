@@ -241,6 +241,14 @@ document.addEventListener("DOMContentLoaded", function () {
             "Piscine / jardin / équipements techniques":
                 "Pool / garden / technical equipment",
             "Sur devis": "Quote on request",
+                        "Pour toute résidence de surface supérieure ou présentant des caractéristiques particulières — équipements spécifiques, piscine, plusieurs bâtiments ou dépendances, espaces extérieurs importants, etc. — une":
+                "For any residence larger than this or with particular features — specific equipment, swimming pool, several buildings or outbuildings, extensive outdoor areas, etc. — a",
+
+            "proposition personnalisée":
+                "personalised proposal",
+
+            "pourra être établie en fonction des besoins de votre propriété.":
+                "can be prepared according to the needs of your property.",
 
             "PARTENAIRES": "PARTNERS",
             "Un réseau d’artisans de confiance":
@@ -498,6 +506,14 @@ document.addEventListener("DOMContentLoaded", function () {
             "Gestion du linge": "Linnenbeheer",
             "Piscine / jardin / équipements techniques": "Zwembad / tuin / technische voorzieningen",
             "Sur devis": "Op aanvraag",
+                        "Pour toute résidence de surface supérieure ou présentant des caractéristiques particulières — équipements spécifiques, piscine, plusieurs bâtiments ou dépendances, espaces extérieurs importants, etc. — une":
+                "Voor elke woning die groter is of bijzondere kenmerken heeft — specifieke voorzieningen, zwembad, meerdere gebouwen of bijgebouwen, grote buitenruimtes, enz. — kan een",
+
+            "proposition personnalisée":
+                "persoonlijk voorstel",
+
+            "pourra être établie en fonction des besoins de votre propriété.":
+                "worden opgesteld op basis van de behoeften van uw woning.",
 
             "PARTENAIRES": "PARTNERS",
             "Un réseau d’artisans de confiance": "Een netwerk van betrouwbare vakmensen",
@@ -737,6 +753,14 @@ document.addEventListener("DOMContentLoaded", function () {
             "Piscine / jardin / équipements techniques":
                 "Piscina / jardín / equipamientos técnicos",
             "Sur devis": "Presupuesto",
+                        "Pour toute résidence de surface supérieure ou présentant des caractéristiques particulières — équipements spécifiques, piscine, plusieurs bâtiments ou dépendances, espaces extérieurs importants, etc. — une":
+                "Para cualquier residencia de mayor superficie o con características particulares — equipamientos específicos, piscina, varios edificios o dependencias, amplios espacios exteriores, etc. — se podrá elaborar una",
+
+            "proposition personnalisée":
+                "propuesta personalizada",
+
+            "pourra être établie en fonction des besoins de votre propriété.":
+                "en función de las necesidades de su propiedad.",
 
             "PARTENAIRES": "SOCIOS",
             "Un réseau d’artisans de confiance": "Una red de profesionales de confianza",
@@ -984,6 +1008,14 @@ document.addEventListener("DOMContentLoaded", function () {
             "Piscine / jardin / équipements techniques":
                 "Pool / Garten / technische Anlagen",
             "Sur devis": "Auf Anfrage",
+                        "Pour toute résidence de surface supérieure ou présentant des caractéristiques particulières — équipements spécifiques, piscine, plusieurs bâtiments ou dépendances, espaces extérieurs importants, etc. — une":
+                "Für jede größere Immobilie oder eine Immobilie mit besonderen Gegebenheiten — spezielle Ausstattungen, Swimmingpool, mehrere Gebäude oder Nebengebäude, große Außenbereiche usw. — kann ein",
+
+            "proposition personnalisée":
+                "individuelles Angebot",
+
+            "pourra être établie en fonction des besoins de votre propriété.":
+                "entsprechend den Bedürfnissen Ihrer Immobilie erstellt werden.",
 
             "PARTENAIRES": "PARTNER",
             "Un réseau d’artisans de confiance":
@@ -1228,6 +1260,14 @@ document.addEventListener("DOMContentLoaded", function () {
             "Piscine / jardin / équipements techniques":
                 "Piscina / giardino / impianti tecnici",
             "Sur devis": "Su preventivo",
+                        "Pour toute résidence de surface supérieure ou présentant des caractéristiques particulières — équipements spécifiques, piscine, plusieurs bâtiments ou dépendances, espaces extérieurs importants, etc. — une":
+                "Per qualsiasi residenza di superficie maggiore o con caratteristiche particolari — attrezzature specifiche, piscina, più edifici o dependance, ampi spazi esterni, ecc. — potrà essere elaborata una",
+
+            "proposition personnalisée":
+                "proposta personalizzata",
+
+            "pourra être établie en fonction des besoins de votre propriété.":
+                "in base alle esigenze della vostra proprietà.",
 
             "PARTENAIRES": "PARTNER",
             "Un réseau d’artisans de confiance":
