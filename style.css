@@ -1450,3 +1450,26 @@ h2 {
         animation: none;
     }
 }
+/* ==========================================
+   CORRECTION GRILLE PARTENAIRES
+========================================== */
+
+.partners-grid {
+    display: grid !important;
+    grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+    gap: 26px !important;
+    max-width: 1300px;
+    margin: 0 auto;
+}
+
+@media (max-width: 1000px) {
+    .partners-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    }
+}
+
+@media (max-width: 760px) {
+    .partners-grid {
+        grid-template-columns: 1fr !important;
+    }
+}
