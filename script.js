@@ -1415,24 +1415,61 @@ function collectOriginalTextElements() {
 /*
  * Recherche d'une traduction.
  */
-function getTranslation(text, language) {
+/* =========================================================
+   TRADUCTION DES TEXTES
+   ========================================================= */
 
-    const cleanText = text
+/*
+ * Normalise un texte :
+ * - remplace les retours à la ligne par des espaces
+ * - supprime les espaces multiples
+ * - retire les espaces au début et à la fin
+ *
+ * Cela permet de faire correspondre correctement
+ * les textes HTML écrits sur plusieurs lignes.
+ */
+function normalizeText(text) {
+
+    return String(text)
         .replace(/\s+/g, " ")
         .trim();
 
+}
+
+
+/*
+ * Recherche une traduction.
+ */
+function getTranslation(text, language) {
+
+    const cleanText = normalizeText(text);
+
+    /*
+     * Le français est la langue d'origine.
+     */
     if (language === "fr") {
         return null;
     }
 
+    /*
+     * Vérification de sécurité.
+     */
+    if (!translations[language]) {
+        return null;
+    }
+
+    /*
+     * Recherche exacte après normalisation.
+     */
     if (
-        translations[language] &&
         Object.prototype.hasOwnProperty.call(
             translations[language],
             cleanText
         )
     ) {
+
         return translations[language][cleanText];
+
     }
 
     return null;
@@ -1441,125 +1478,86 @@ function getTranslation(text, language) {
 
 
 /*
- * Remplacement des textes.
+ * Remplacement de tous les textes.
  *
- * Cette version traite :
- * - les textes simples
- * - les paragraphes sur plusieurs lignes
+ * IMPORTANT :
+ * On travaille directement sur les nœuds de texte
+ * mémorisés au chargement de la page.
+ *
+ * Cela permet de traduire :
  * - les titres
  * - les sous-titres
+ * - les paragraphes
+ * - les textes des cartes
  * - les boutons
- * - les éléments des cartes
- * - les textes contenus dans les spans
+ * - les listes
+ * - les textes écrits sur plusieurs lignes
+ * - les textes situés à côté d'un <span>
  */
 function replaceTextNodes(language) {
 
-    /*
-     * Première étape :
-     * on remet toujours les éléments dans leur
-     * texte français d'origine.
-     */
-    originalTextElements.forEach(function (item) {
-
-        item.element.textContent = item.text;
-
-    });
-
-
-    /*
-     * Deuxième étape :
-     * traduction des éléments complets.
-     */
-    originalTextElements.forEach(function (item) {
-
-        const translated = getTranslation(
-            item.text,
-            language
-        );
-
-        if (translated) {
-
-            item.element.textContent = translated;
-
-        }
-
-    });
-
-
-    /*
-     * Troisième étape :
-     * on traite les textes qui se trouvent
-     * dans des éléments contenant d'autres éléments HTML.
-     *
-     * Exemple :
-     *
-     * <h1>
-     *     Votre résidence,
-     *     <span>notre attention.</span>
-     * </h1>
-     */
     originalTextNodes.forEach(function (item) {
 
         /*
-         * Si le parent est un élément qui possède
-         * déjà plusieurs enfants, on laisse cette
-         * partie au système de traduction des nœuds.
+         * Retour au texte français d'origine.
+         *
+         * Cela évite qu'un changement EN → DE
+         * tente de traduire l'anglais vers l'allemand.
          */
-        const parent = item.node.parentElement;
+        item.node.nodeValue = item.text;
 
-        if (!parent) {
+    });
+
+
+    /*
+     * Si nous sommes en français,
+     * le texte original est déjà correct.
+     */
+    if (language === "fr") {
+        return;
+    }
+
+
+    /*
+     * Traduction de chaque nœud.
+     */
+    originalTextNodes.forEach(function (item) {
+
+        const originalText =
+            normalizeText(item.text);
+
+        if (!originalText) {
             return;
         }
+
+
+        const translated =
+            getTranslation(
+                originalText,
+                language
+            );
+
 
         /*
-         * Si le texte appartient à un élément qui
-         * vient déjà d'être traduit intégralement,
-         * on ne le modifie pas une deuxième fois.
+         * Une traduction existe.
          */
-        if (
-            originalTextElements.some(function (elementItem) {
-                return elementItem.element === parent;
-            })
-        ) {
-            return;
-        }
-
-        const original = item.text
-            .replace(/\s+/g, " ")
-            .trim();
-
-        if (!original) {
-            return;
-        }
-
-        if (language === "fr") {
-
-            item.node.nodeValue = item.text;
-            return;
-
-        }
-
-        const translated = getTranslation(
-            original,
-            language
-        );
-
         if (translated) {
 
-            const leadingSpaces =
+            /*
+             * On conserve les espaces / retours à la ligne
+             * présents dans le HTML autour du texte.
+             */
+            const leadingWhitespace =
                 item.text.match(/^\s*/)?.[0] || "";
 
-            const trailingSpaces =
+            const trailingWhitespace =
                 item.text.match(/\s*$/)?.[0] || "";
 
+
             item.node.nodeValue =
-                leadingSpaces +
+                leadingWhitespace +
                 translated +
-                trailingSpaces;
-
-        } else {
-
-            item.node.nodeValue = item.text;
+                trailingWhitespace;
 
         }
 
@@ -1567,71 +1565,66 @@ function replaceTextNodes(language) {
 
 }
 
-            const translated = getTranslation(original, language);
 
-            if (translated) {
+/* =========================================================
+   TRADUCTION DES ATTRIBUTS HTML
+   ========================================================= */
 
-                const leadingSpaces =
-                    item.text.match(/^\s*/)?.[0] || "";
+function replaceAttributes(language) {
 
-                const trailingSpaces =
-                    item.text.match(/\s*$/)?.[0] || "";
+    originalAttributes.forEach(function (item) {
 
-                item.node.nodeValue =
-                    leadingSpaces +
-                    translated +
-                    trailingSpaces;
+        /*
+         * Retour au français.
+         */
+        if (language === "fr") {
 
-            } else {
+            item.element.setAttribute(
+                item.attribute,
+                item.value
+            );
 
-                /*
-                 * Si aucune traduction n'est trouvée,
-                 * on conserve le français plutôt que de casser le texte.
-                 */
-                item.node.nodeValue = item.text;
-            }
+            return;
 
-        });
-    }
+        }
 
 
-    function replaceAttributes(language) {
-
-        originalAttributes.forEach(function (item) {
-
-            if (language === "fr") {
-
-                item.element.setAttribute(
-                    item.attribute,
-                    item.value
-                );
-
-                return;
-            }
-
-            const translated = getTranslation(
+        /*
+         * Recherche de la traduction.
+         */
+        const translated =
+            getTranslation(
                 item.value,
                 language
             );
 
-            if (translated) {
 
-                item.element.setAttribute(
-                    item.attribute,
-                    translated
-                );
+        /*
+         * Traduction trouvée.
+         */
+        if (translated) {
 
-            } else {
+            item.element.setAttribute(
+                item.attribute,
+                translated
+            );
 
-                item.element.setAttribute(
-                    item.attribute,
-                    item.value
-                );
+        } else {
 
-            }
+            /*
+             * Si aucune traduction n'existe,
+             * on conserve le texte français.
+             */
+            item.element.setAttribute(
+                item.attribute,
+                item.value
+            );
 
-        });
-    }
+        }
+
+    });
+
+}
 
 
     /* =========================================================
