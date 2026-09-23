@@ -2113,10 +2113,9 @@ function replaceAttributes(language) {
 
                             if (entry.isIntersecting) {
 
-                                entry.target.classList.add(
-                                    "visible"
-                                );
-
+                              entry.target.classList.add(
+    "is-visible"
+);
                                 obs.unobserve(
                                     entry.target
                                 );
