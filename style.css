@@ -1506,3 +1506,36 @@ video {
 * {
     box-sizing: border-box;
 }
+/* =========================
+   CORRECTION PRESTATIONS MOBILE
+========================= */
+
+@media screen and (max-width: 760px) {
+
+    .services-grid {
+        display: grid !important;
+        grid-template-columns: 1fr !important;
+        gap: 18px !important;
+    }
+
+    .service-card {
+        width: 100%;
+        min-width: 0;
+        min-height: 180px;
+        padding: 24px;
+    }
+
+    .service-card h3 {
+        font-size: 22px;
+        line-height: 1.2;
+        white-space: normal;
+        overflow-wrap: break-word;
+        word-break: normal;
+    }
+
+    .service-icon {
+        margin-bottom: 25px;
+        font-size: 28px;
+    }
+
+}
