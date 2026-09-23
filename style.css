@@ -1326,9 +1326,9 @@ p {
         box-shadow: var(--shadow);
     }
 
-    .nav.active {
-        display: flex;
-    }
+    .nav.open {
+    display: flex;
+}
 
     .nav a,
     .header.scrolled .nav a {
@@ -1485,4 +1485,24 @@ p {
         opacity: 1;
         transform: none;
     }
+}
+/* =========================
+   CORRECTIONS MOBILE
+========================= */
+
+html,
+body {
+    width: 100%;
+    max-width: 100%;
+    overflow-x: hidden;
+}
+
+img,
+video {
+    max-width: 100%;
+    height: auto;
+}
+
+* {
+    box-sizing: border-box;
 }
