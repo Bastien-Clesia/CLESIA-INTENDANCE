@@ -295,8 +295,10 @@ p {
 
 .hero-content {
     position: relative;
-   padding: 210px 0 100px;
+    padding: 150px 0 100px;
     max-width: 900px;
+    transform: translateY(70px);
+    z-index: 2;
 }
 
 .hero-tag {
