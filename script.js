@@ -1,4 +1,22 @@
 document.addEventListener("DOMContentLoaded", function () {
+    console.log("CLESIA : script chargé");
+
+const testLanguageSelect = document.getElementById("language-select");
+
+console.log(
+    "CLESIA : sélecteur trouvé =",
+    testLanguageSelect
+);
+
+if (testLanguageSelect) {
+    testLanguageSelect.addEventListener("change", function () {
+        console.log(
+            "CLESIA : langue sélectionnée =",
+            this.value
+        );
+        alert("Langue sélectionnée : " + this.value);
+    });
+}
 
     /* =========================================================
        CLÉSIA PROVENCE — SYSTÈME MULTILINGUE
