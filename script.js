@@ -1,3 +1,4 @@
+alert("CLESIA SCRIPT OK");
 document.addEventListener("DOMContentLoaded", function () {
     console.log("CLESIA : script chargé");
 
