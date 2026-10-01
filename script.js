@@ -1481,43 +1481,6 @@ setLanguage(savedLanguage);
     }
 
 
-    /* =========================================================
-       FIN DU SCRIPT
-       ========================================================= */
-
-        /* =====================================================
-           FIN DES TRADUCTIONS + MÉTADONNÉES SEO
-           ===================================================== */
-
-        "Votre nom": "Your name",
-        "Commune": "Town",
-        "Votre commune": "Your town",
-        "Besoin principal": "Main requirement",
-        "Sélectionnez une option": "Select an option",
-        "Intendance à l'année": "Year-round management",
-        "Surveillance de résidence": "Residence monitoring",
-        "Intervention ponctuelle": "One-off intervention",
-        "Demande de devis": "Quote request",
-        "Autre": "Other",
-        "Votre message": "Your message",
-        "Décrivez-nous votre besoin...": "Tell us about your requirements...",
-        "Envoyer ma demande": "Send my request",
-
-        "Vos informations restent confidentielles et sont uniquement utilisées pour répondre à votre demande.":
-            "Your information remains confidential and is only used to respond to your request.",
-
-        "Intendance privée de résidences secondaires en Provence et dans le Vaucluse.":
-            "Private management of second homes in Provence and the Vaucluse.",
-
-        "Navigation": "Navigation",
-        "Le Thor · Vaucluse": "Le Thor · Vaucluse",
-        "Mentions légales": "Legal notice",
-        "Politique de confidentialité": "Privacy policy",
-        "Tous droits réservés.": "All rights reserved."
-
-    },
-
-
     /* =====================================================
        NÉERLANDAIS
        ===================================================== */
