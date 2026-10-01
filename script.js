@@ -5,7 +5,7 @@ document.addEventListener("DOMContentLoaded", function () {
        FR / EN / NL / ES / DE / IT
        ========================================================= */
 
-    const languageSelect = document.getElementById("language-select");
+   let languageSelect = null;
 
     /*
      * On mémorise les textes français présents dans le HTML.
@@ -1145,45 +1145,59 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
     /* =========================================================
-       INITIALISATION DE LA LANGUE
-       ========================================================= */
+   INITIALISATION DE LA LANGUE
+   ========================================================= */
 
-    collectOriginalTextNodes();
+collectOriginalTextNodes();
 
-    collectOriginalAttributes();
+collectOriginalAttributes();
 
-    let savedLanguage = "fr";
+let savedLanguage = "fr";
 
-    try {
-        savedLanguage =
-            localStorage.getItem("clesia-language") || "fr";
-    } catch (error) {
-        savedLanguage = "fr";
-    }
-
-    setLanguage(savedLanguage);
+try {
+    savedLanguage =
+        localStorage.getItem("clesia-language") || "fr";
+} catch (error) {
+    savedLanguage = "fr";
+}
 
 
-    if (languageSelect) {
+/* =========================================================
+   SÉLECTEUR DE LANGUE
+   ========================================================= */
 
-        languageSelect.addEventListener(
-            "change",
-            function () {
+const languageSelectElement =
+    document.getElementById("language-select");
 
-                setLanguage(
-                    languageSelect.value
-                );
+if (languageSelectElement) {
 
-            }
-        );
+    languageSelectElement.value = savedLanguage;
 
-    }
+    languageSelectElement.addEventListener(
+        "change",
+        function (event) {
+
+            const selectedLanguage =
+                event.target.value;
+
+            setLanguage(selectedLanguage);
+
+        }
+    );
+
+}
 
 
-    /* =========================================================
-       MENU MOBILE
-       ========================================================= */
+/* =========================================================
+   APPLICATION DE LA LANGUE
+   ========================================================= */
 
+setLanguage(savedLanguage);
+
+
+/* =========================================================
+   MENU MOBILE
+   ========================================================= */
     const menuToggle =
         document.querySelector(".menu-toggle");
 
