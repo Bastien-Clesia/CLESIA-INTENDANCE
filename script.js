@@ -1007,3 +1007,1066 @@ document.addEventListener("DOMContentLoaded", function () {
         }
 
     };
+            /* =====================================================
+           APPLICATION DES TRADUCTIONS
+           ===================================================== */
+
+        function applyTranslations(language) {
+
+            const dictionary = translations[language] || {};
+
+            /*
+             * Traduction des textes présents dans le HTML
+             */
+            originalTextNodes.forEach(function (item) {
+
+                const originalText = item.text;
+                const trimmedText = originalText.trim();
+
+                /*
+                 * Retour au français :
+                 * on remet exactement le texte original.
+                 */
+                if (language === "fr") {
+                    item.node.nodeValue = originalText;
+                    return;
+                }
+
+                /*
+                 * Si une traduction existe,
+                 * on conserve les espaces avant et après le texte.
+                 */
+                if (dictionary[trimmedText]) {
+
+                    const leadingMatch = originalText.match(/^\s*/);
+                    const trailingMatch = originalText.match(/\s*$/);
+
+                    const leading = leadingMatch
+                        ? leadingMatch[0]
+                        : "";
+
+                    const trailing = trailingMatch
+                        ? trailingMatch[0]
+                        : "";
+
+                    item.node.nodeValue =
+                        leading +
+                        dictionary[trimmedText] +
+                        trailing;
+
+                } else {
+
+                    /*
+                     * Si aucune traduction n'existe,
+                     * on laisse le texte français.
+                     */
+                    item.node.nodeValue = originalText;
+                }
+
+            });
+
+
+            /*
+             * Traduction des attributs HTML :
+             *
+             * placeholder
+             * aria-label
+             * alt
+             * title
+             */
+            originalAttributes.forEach(function (item) {
+
+                const originalValue = item.value;
+
+                /*
+                 * Retour au français
+                 */
+                if (language === "fr") {
+
+                    item.element.setAttribute(
+                        item.attribute,
+                        originalValue
+                    );
+
+                    return;
+                }
+
+
+                /*
+                 * Traduction si disponible
+                 */
+                if (dictionary[originalValue]) {
+
+                    item.element.setAttribute(
+                        item.attribute,
+                        dictionary[originalValue]
+                    );
+
+                } else {
+
+                    /*
+                     * Sinon on conserve la valeur française.
+                     */
+                    item.element.setAttribute(
+                        item.attribute,
+                        originalValue
+                    );
+                }
+
+            });
+
+        }
+
+
+        /* =====================================================
+           CHANGEMENT DE LANGUE
+           ===================================================== */
+
+        function changeLanguage(language) {
+
+            /*
+             * Si la langue demandée n'existe pas,
+             * on revient au français.
+             */
+            if (
+                language !== "fr" &&
+                !translations[language]
+            ) {
+                language = "fr";
+            }
+
+
+            /*
+             * Application des traductions
+             */
+            applyTranslations(language);
+
+
+            /*
+             * Mise à jour de l'attribut lang du HTML
+             */
+            document.documentElement.lang = language;
+
+
+            /*
+             * Mise à jour du sélecteur
+             */
+            if (languageSelect) {
+                languageSelect.value = language;
+            }
+
+
+            /*
+             * Mémorisation de la langue choisie.
+             *
+             * Ainsi, lorsque le visiteur revient sur le site,
+             * sa langue est conservée.
+             */
+            try {
+
+                localStorage.setItem(
+                    "clesia-language",
+                    language
+                );
+
+            } catch (error) {
+
+                console.warn(
+                    "CLÉSIA : impossible d'enregistrer la langue.",
+                    error
+                );
+
+            }
+
+        }
+
+
+        /* =====================================================
+           INITIALISATION DES TEXTES ORIGINAUX
+           ===================================================== */
+
+        collectOriginalTextNodes();
+
+        collectOriginalAttributes();
+
+
+        /* =====================================================
+           RÉCUPÉRATION DE LA LANGUE ENREGISTRÉE
+           ===================================================== */
+
+        let savedLanguage = "fr";
+
+        try {
+
+            savedLanguage =
+                localStorage.getItem(
+                    "clesia-language"
+                ) || "fr";
+
+        } catch (error) {
+
+            console.warn(
+                "CLÉSIA : impossible de récupérer la langue.",
+                error
+            );
+
+        }
+
+
+        /* =====================================================
+           APPLICATION DE LA LANGUE AU CHARGEMENT
+           ===================================================== */
+
+        changeLanguage(savedLanguage);
+
+
+        /* =====================================================
+           ÉCOUTE DU SÉLECTEUR DE LANGUE
+           ===================================================== */
+
+        if (languageSelect) {
+
+            languageSelect.addEventListener(
+                "change",
+                function () {
+
+                    changeLanguage(this.value);
+
+                }
+            );
+
+        }
+
+
+        /* =====================================================
+           MENU MOBILE
+           ===================================================== */
+
+        const menuToggle =
+            document.querySelector(
+                ".menu-toggle"
+            );
+
+        const mobileMenu =
+            document.querySelector(
+                ".mobile-menu"
+            );
+
+
+        if (menuToggle && mobileMenu) {
+
+            menuToggle.addEventListener(
+                "click",
+                function () {
+
+                    mobileMenu.classList.toggle(
+                        "active"
+                    );
+
+                    menuToggle.classList.toggle(
+                        "active"
+                    );
+
+                    const isOpen =
+                        mobileMenu.classList.contains(
+                            "active"
+                        );
+
+                    menuToggle.setAttribute(
+                        "aria-expanded",
+                        isOpen ? "true" : "false"
+                    );
+
+                }
+            );
+
+
+            /*
+             * Fermeture du menu lorsqu'on clique
+             * sur un lien du menu mobile.
+             */
+            const mobileLinks =
+                mobileMenu.querySelectorAll(
+                    "a"
+                );
+
+
+            mobileLinks.forEach(function (link) {
+
+                link.addEventListener(
+                    "click",
+                    function () {
+
+                        mobileMenu.classList.remove(
+                            "active"
+                        );
+
+                        menuToggle.classList.remove(
+                            "active"
+                        );
+
+                        menuToggle.setAttribute(
+                            "aria-expanded",
+                            "false"
+                        );
+
+                    }
+                );
+
+            });
+
+        }
+
+
+        /* =====================================================
+           MENU MOBILE — SÉLECTEURS ALTERNATIFS
+           ===================================================== */
+
+        /*
+         * Si ton HTML utilise un autre système de menu,
+         * on essaie également les classes courantes.
+         */
+
+        const alternativeMenuButton =
+            document.querySelector(
+                "[data-menu-toggle]"
+            );
+
+        const alternativeMenu =
+            document.querySelector(
+                "[data-mobile-menu]"
+            );
+
+
+        if (
+            alternativeMenuButton &&
+            alternativeMenu
+        ) {
+
+            alternativeMenuButton.addEventListener(
+                "click",
+                function () {
+
+                    alternativeMenu.classList.toggle(
+                        "active"
+                    );
+
+                    alternativeMenuButton.classList.toggle(
+                        "active"
+                    );
+
+                }
+            );
+
+        }
+
+
+        /* =====================================================
+           FERMETURE DU MENU AVEC LA TOUCHE ESC
+           ===================================================== */
+
+        document.addEventListener(
+            "keydown",
+            function (event) {
+
+                if (event.key !== "Escape") {
+                    return;
+                }
+
+
+                if (mobileMenu) {
+
+                    mobileMenu.classList.remove(
+                        "active"
+                    );
+
+                }
+
+
+                if (menuToggle) {
+
+                    menuToggle.classList.remove(
+                        "active"
+                    );
+
+                    menuToggle.setAttribute(
+                        "aria-expanded",
+                        "false"
+                    );
+
+                }
+
+
+                if (alternativeMenu) {
+
+                    alternativeMenu.classList.remove(
+                        "active"
+                    );
+
+                }
+
+
+                if (alternativeMenuButton) {
+
+                    alternativeMenuButton.classList.remove(
+                        "active"
+                    );
+
+                }
+
+            }
+        );
+
+
+        /* =====================================================
+           LIENS D'ANCRAGE — DÉFILEMENT FLUIDE
+           ===================================================== */
+
+        const anchorLinks =
+            document.querySelectorAll(
+                'a[href^="#"]'
+            );
+
+
+        anchorLinks.forEach(function (link) {
+
+            link.addEventListener(
+                "click",
+                function (event) {
+
+                    const targetId =
+                        this.getAttribute("href");
+
+
+                    /*
+                     * href="#" ne doit pas provoquer
+                     * d'erreur ou de déplacement inutile.
+                     */
+                    if (
+                        !targetId ||
+                        targetId === "#"
+                    ) {
+                        return;
+                    }
+
+
+                    const target =
+                        document.querySelector(
+                            targetId
+                        );
+
+
+                    if (!target) {
+                        return;
+                    }
+
+
+                    event.preventDefault();
+
+
+                    /*
+                     * On tient compte d'un éventuel header fixe.
+                     */
+                    const header =
+                        document.querySelector(
+                            "header"
+                        );
+
+
+                    const headerHeight =
+                        header
+                            ? header.offsetHeight
+                            : 0;
+
+
+                    const targetPosition =
+                        target.getBoundingClientRect().top +
+                        window.pageYOffset -
+                        headerHeight;
+
+
+                    window.scrollTo({
+                        top: targetPosition,
+                        behavior: "smooth"
+                    });
+
+                }
+            );
+
+        });
+
+
+        /* =====================================================
+           BOUTON RETOUR EN HAUT
+           ===================================================== */
+
+        const backToTop =
+            document.querySelector(
+                "#back-to-top"
+            );
+
+
+        if (backToTop) {
+
+            window.addEventListener(
+                "scroll",
+                function () {
+
+                    if (window.scrollY > 500) {
+
+                        backToTop.classList.add(
+                            "visible"
+                        );
+
+                    } else {
+
+                        backToTop.classList.remove(
+                            "visible"
+                        );
+
+                    }
+
+                }
+            );
+
+
+            backToTop.addEventListener(
+                "click",
+                function (event) {
+
+                    event.preventDefault();
+
+                    window.scrollTo({
+                        top: 0,
+                        behavior: "smooth"
+                    });
+
+                }
+            );
+
+        }
+
+    });
+    /*
+     * =========================================================
+     * CLÉSIA PROVENCE — INTERACTIONS COMPLÉMENTAIRES
+     * =========================================================
+     */
+
+    /* =========================================================
+       BOUTONS ET LIENS DE CONTACT
+       ========================================================= */
+
+    const contactButtons = document.querySelectorAll(
+        'a[href="#contact"], a[href="#contact-form"], [data-contact]'
+    );
+
+    contactButtons.forEach(function (button) {
+
+        button.addEventListener("click", function () {
+
+            const contactSection =
+                document.querySelector("#contact") ||
+                document.querySelector("#contact-form");
+
+            if (!contactSection) {
+                return;
+            }
+
+            const header =
+                document.querySelector("header");
+
+            const headerHeight =
+                header ? header.offsetHeight : 0;
+
+            const position =
+                contactSection.getBoundingClientRect().top +
+                window.pageYOffset -
+                headerHeight;
+
+            window.scrollTo({
+                top: position,
+                behavior: "smooth"
+            });
+
+        });
+
+    });
+
+
+    /* =========================================================
+       FORMULAIRE DE CONTACT
+       ========================================================= */
+
+    const contactForm =
+        document.querySelector(
+            "#contact-form"
+        ) ||
+        document.querySelector(
+            "form"
+        );
+
+
+    if (contactForm) {
+
+        contactForm.addEventListener(
+            "submit",
+            function (event) {
+
+                /*
+                 * On empêche le navigateur de recharger
+                 * la page automatiquement.
+                 */
+                event.preventDefault();
+
+
+                /*
+                 * Récupération des champs.
+                 */
+                const nameField =
+                    contactForm.querySelector(
+                        '[name="name"], [name="nom"], #name, #nom'
+                    );
+
+                const emailField =
+                    contactForm.querySelector(
+                        '[name="email"], #email'
+                    );
+
+                const phoneField =
+                    contactForm.querySelector(
+                        '[name="phone"], [name="telephone"], #phone, #telephone'
+                    );
+
+                const messageField =
+                    contactForm.querySelector(
+                        '[name="message"], #message'
+                    );
+
+
+                const name =
+                    nameField
+                        ? nameField.value.trim()
+                        : "";
+
+                const email =
+                    emailField
+                        ? emailField.value.trim()
+                        : "";
+
+                const phone =
+                    phoneField
+                        ? phoneField.value.trim()
+                        : "";
+
+                const message =
+                    messageField
+                        ? messageField.value.trim()
+                        : "";
+
+
+                /*
+                 * Vérification minimale.
+                 */
+                if (
+                    nameField &&
+                    !name
+                ) {
+
+                    nameField.focus();
+
+                    return;
+
+                }
+
+
+                if (
+                    emailField &&
+                    !email
+                ) {
+
+                    emailField.focus();
+
+                    return;
+
+                }
+
+
+                /*
+                 * Vérification simple de l'adresse email.
+                 */
+                if (
+                    emailField &&
+                    email &&
+                    !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)
+                ) {
+
+                    emailField.focus();
+
+                    return;
+
+                }
+
+
+                /*
+                 * Si le formulaire possède un endpoint
+                 * ou un attribut action, on laisse le formulaire
+                 * fonctionner normalement.
+                 *
+                 * Cette partie évite de casser un éventuel
+                 * système d'envoi déjà présent sur le site.
+                 */
+                const formAction =
+                    contactForm.getAttribute("action");
+
+
+                if (
+                    formAction &&
+                    formAction !== "#"
+                ) {
+
+                    contactForm.submit();
+
+                    return;
+
+                }
+
+
+                /*
+                 * Si aucun système d'envoi n'est configuré,
+                 * on prépare un email via mailto.
+                 */
+                const recipient =
+                    contactForm.dataset.email ||
+                    "contact@clesia-provence.fr";
+
+
+                const subject =
+                    "Demande de renseignements — Clésia Provence";
+
+
+                let body =
+                    "Bonjour,\n\n";
+
+
+                if (name) {
+                    body +=
+                        "Nom : " +
+                        name +
+                        "\n";
+                }
+
+
+                if (email) {
+                    body +=
+                        "Email : " +
+                        email +
+                        "\n";
+                }
+
+
+                if (phone) {
+                    body +=
+                        "Téléphone : " +
+                        phone +
+                        "\n";
+                }
+
+
+                if (message) {
+                    body +=
+                        "\nMessage :\n" +
+                        message +
+                        "\n";
+                }
+
+
+                body +=
+                    "\nMerci.";
+
+
+                const mailto =
+                    "mailto:" +
+                    recipient +
+                    "?subject=" +
+                    encodeURIComponent(subject) +
+                    "&body=" +
+                    encodeURIComponent(body);
+
+
+                window.location.href = mailto;
+
+            }
+        );
+
+    }
+
+
+    /* =========================================================
+       LIENS EMAIL
+       ========================================================= */
+
+    const emailLinks =
+        document.querySelectorAll(
+            'a[href^="mailto:"]'
+        );
+
+
+    emailLinks.forEach(function (link) {
+
+        link.addEventListener(
+            "click",
+            function () {
+
+                /*
+                 * Le navigateur gère directement
+                 * les liens mailto.
+                 *
+                 * Aucun traitement supplémentaire
+                 * n'est nécessaire.
+                 */
+
+            }
+        );
+
+    });
+
+
+    /* =========================================================
+       LIENS TÉLÉPHONE
+       ========================================================= */
+
+    const phoneLinks =
+        document.querySelectorAll(
+            'a[href^="tel:"]'
+        );
+
+
+    phoneLinks.forEach(function (link) {
+
+        link.addEventListener(
+            "click",
+            function () {
+
+                /*
+                 * Sur mobile, le lien tel:
+                 * est automatiquement pris en charge.
+                 */
+
+            }
+        );
+
+    });
+
+
+    /* =========================================================
+       ANIMATION DES ÉLÉMENTS AU DÉFILEMENT
+       ========================================================= */
+
+    const animatedElements =
+        document.querySelectorAll(
+            ".fade-in, .fade-up, .reveal, [data-reveal]"
+        );
+
+
+    if (
+        animatedElements.length &&
+        "IntersectionObserver" in window
+    ) {
+
+        const observer =
+            new IntersectionObserver(
+                function (entries) {
+
+                    entries.forEach(
+                        function (entry) {
+
+                            if (
+                                entry.isIntersecting
+                            ) {
+
+                                entry.target.classList.add(
+                                    "visible"
+                                );
+
+                                observer.unobserve(
+                                    entry.target
+                                );
+
+                            }
+
+                        }
+                    );
+
+                },
+                {
+                    threshold: 0.15
+                }
+            );
+
+
+        animatedElements.forEach(
+            function (element) {
+
+                observer.observe(
+                    element
+                );
+
+            }
+        );
+
+    } else {
+
+        /*
+         * Compatibilité avec les anciens navigateurs.
+         */
+        animatedElements.forEach(
+            function (element) {
+
+                element.classList.add(
+                    "visible"
+                );
+
+            }
+        );
+
+    }
+
+
+    /* =========================================================
+       ANNÉE AUTOMATIQUE DANS LE FOOTER
+       ========================================================= */
+
+    const currentYear =
+        new Date().getFullYear();
+
+
+    const yearElements =
+        document.querySelectorAll(
+            "#current-year, [data-current-year]"
+        );
+
+
+    yearElements.forEach(
+        function (element) {
+
+            element.textContent =
+                currentYear;
+
+        }
+    );
+
+
+    /* =========================================================
+       PROTECTION DES LIENS EXTERNES
+       ========================================================= */
+
+    const externalLinks =
+        document.querySelectorAll(
+            'a[target="_blank"]'
+        );
+
+
+    externalLinks.forEach(
+        function (link) {
+
+            const currentRel =
+                link.getAttribute("rel") || "";
+
+
+            if (
+                !currentRel.includes("noopener")
+            ) {
+
+                link.setAttribute(
+                    "rel",
+                    (
+                        currentRel +
+                        " noopener"
+                    ).trim()
+                );
+
+            }
+
+
+            if (
+                !currentRel.includes("noreferrer")
+            ) {
+
+                link.setAttribute(
+                    "rel",
+                    (
+                        link.getAttribute("rel") +
+                        " noreferrer"
+                    ).trim()
+                );
+
+            }
+
+        }
+    );
+
+
+    /* =========================================================
+       FERMETURE DES ÉLÉMENTS INTERACTIFS AU CLIC EXTÉRIEUR
+       ========================================================= */
+
+    document.addEventListener(
+        "click",
+        function (event) {
+
+            /*
+             * Menu mobile
+             */
+            if (
+                mobileMenu &&
+                menuToggle &&
+                mobileMenu.classList.contains("active")
+            ) {
+
+                const clickedInsideMenu =
+                    mobileMenu.contains(
+                        event.target
+                    );
+
+                const clickedToggle =
+                    menuToggle.contains(
+                        event.target
+                    );
+
+
+                if (
+                    !clickedInsideMenu &&
+                    !clickedToggle
+                ) {
+
+                    mobileMenu.classList.remove(
+                        "active"
+                    );
+
+                    menuToggle.classList.remove(
+                        "active"
+                    );
+
+                    menuToggle.setAttribute(
+                        "aria-expanded",
+                        "false"
+                    );
+
+                }
+
+            }
+
+        }
+    );
+
+
+    /* =========================================================
+       VÉRIFICATION FINALE
+       ========================================================= */
+
+    console.log(
+        "CLÉSIA : script principal initialisé."
+    );
+
+});
